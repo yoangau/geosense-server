@@ -7,14 +7,14 @@ import { Game } from './game.entity';
 export class GameService {
   constructor(
     @InjectRepository(Game)
-    private usersRepository: Repository<Game>,
+    private gameRepository: Repository<Game>,
   ) {}
 
   findAll(): Promise<Game[]> {
-    return this.usersRepository.find();
+    return this.gameRepository.find();
   }
 
   addOne(name: string): void {
-    this.usersRepository.save({name})
+    this.gameRepository.save({name})
   }
 }
