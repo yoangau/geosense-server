@@ -11,10 +11,10 @@ export class GameService {
   ) {}
 
   findAll(): Promise<Game[]> {
-    return this.gameRepository.find();
+    return this.gameRepository.find({ relations: ['users'] });
   }
 
   addOne(name: string): void {
-    this.gameRepository.save({name})
+    this.gameRepository.save({ name, users: [{ name }] });
   }
 }
