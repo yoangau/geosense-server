@@ -12,8 +12,8 @@ export class City {
   @Column()
   country: string;
 
-  @Column()
-  adminName: string;
+  @Column({ nullable: true })
+  adminName?: string;
 
   @Column()
   flag: string;

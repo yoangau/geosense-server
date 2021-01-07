@@ -15,7 +15,7 @@ const countriesWithFlags = _.transform(
       city: prop.name,
       country: prop.adm0name,
       adminName: prop.adm1name,
-      flag: flagsData[prop.iso_a2]?.emoji,
+      flag: prop.sov_a3 === 'SOL' || prop.sov_a3 === 'KOS' ? '🏴󠁳󠁤󠁮󠁯󠁿' : flagsData[prop.iso_a2]?.emoji,
       isCapital: prop.adm0cap === 1,
       latitude: prop.latitude,
       longitude: prop.longitude,
