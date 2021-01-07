@@ -22,7 +22,10 @@ export class City {
   isCapital: boolean;
 
   @Column()
-  coordinates: [number, number];
+  latitude: number;
+
+  @Column()
+  longitude: number;
 
   @Column({ default: true })
   isActive: boolean;
