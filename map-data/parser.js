@@ -19,6 +19,6 @@ const countriesWithFlags = _.transform(countries, (acc, curr) => {
     })
 }, [])
 
-fs.writeFileSync("./cities-flags.json", JSON.stringify(countriesWithFlags))
+fs.writeFileSync("../src/map/cities-flags.json", JSON.stringify(countriesWithFlags))
 
 process.exit()
