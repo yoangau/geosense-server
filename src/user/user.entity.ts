@@ -4,14 +4,14 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 't
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
   name: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({ type: 'datetime' })
+  dateCreate: Date;
 
   @ManyToMany(
     type => Game,
@@ -24,4 +24,7 @@ export class User {
     score => score.user,
   )
   scores: Score[];
+
+  @Column({ default: true })
+  isActive: boolean;
 }

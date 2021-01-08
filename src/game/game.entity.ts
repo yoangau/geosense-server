@@ -5,14 +5,14 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMan
 
 @Entity()
 export class Game {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
   name: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({ type: 'datetime' })
+  dateCreate: Date;
 
   @ManyToMany(
     type => User,
@@ -39,4 +39,7 @@ export class Game {
     score => score.game,
   )
   scores: Score[];
+
+  @Column({ default: true })
+  isActive: boolean;
 }
