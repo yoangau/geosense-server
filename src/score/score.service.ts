@@ -7,6 +7,10 @@ import { Score } from './score.entity';
 export class ScoreService {
   constructor(
     @InjectRepository(Score)
-    private cityRepository: Repository<Score>,
+    private scoreRepository: Repository<Score>,
   ) {}
+
+  updateScore(score: Score) {
+    this.scoreRepository.save(score);
+  }
 }
