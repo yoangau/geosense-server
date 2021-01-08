@@ -10,7 +10,12 @@ export class CityService {
     private cityRepository: Repository<City>,
   ) {}
 
-  findAll(): Promise<City[]> {
-    return this.cityRepository.find();
+  find(quantity: number): Promise<City[]> {
+    return this.cityRepository
+      .createQueryBuilder()
+      .select('*')
+      .orderBy('RANDOM()')
+      .limit(quantity)
+      .execute();
   }
 }
