@@ -11,7 +11,7 @@ export class User {
   name: string;
 
   @Column({ type: 'datetime' })
-  dateCreate: Date;
+  dateCreated: Date;
 
   @ManyToMany(
     type => Game,
