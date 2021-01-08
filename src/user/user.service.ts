@@ -10,11 +10,11 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.userRepository.find({ relations: ['games'] });
+  getOne(id: string): Promise<User> {
+    return this.userRepository.findOne(id, { relations: ['games', 'scores'] });
   }
 
-  addOne(name: string): void {
-    this.userRepository.save({ name });
+  addOne(name: string): Promise<User> {
+    return this.userRepository.save({ name, dateCreated: new Date() });
   }
 }
