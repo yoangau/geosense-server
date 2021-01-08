@@ -1,6 +1,7 @@
 import { City } from 'src/city/city.entity';
+import { Score } from 'src/score/score.entity';
 import { User } from 'src/user/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 
 @Entity()
 export class Game {
@@ -32,4 +33,10 @@ export class Game {
   )
   @JoinTable()
   cities: City[];
+
+  @OneToMany(
+    type => Score,
+    score => score.game,
+  )
+  scores: Score[];
 }

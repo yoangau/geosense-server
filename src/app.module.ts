@@ -3,9 +3,10 @@ import { GameModule } from './game/game.module';
 import { CityModule } from './city/city.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { ScoreModule } from './score/score.module';
 
 @Module({
-  imports: [GameModule, CityModule, UserModule, TypeOrmModule.forRoot()],
+  imports: [GameModule, CityModule, UserModule, ScoreModule, TypeOrmModule.forRoot()],
   controllers: [],
   providers: [],
 })
