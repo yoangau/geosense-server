@@ -18,7 +18,7 @@ export class UserService {
     return this.userRepository.findByIds(ids);
   }
 
-  addOne(name: string): Promise<User> {
-    return this.userRepository.save({ name, dateCreated: new Date() });
+  addOne(name: string, color: string): Promise<User> {
+    return this.userRepository.save({ name, color, dateCreated: new Date() });
   }
 }

@@ -10,6 +10,9 @@ export class User {
   @Column()
   name: string;
 
+  @Column()
+  color: string;
+
   @Column({ type: 'datetime' })
   dateCreated: Date;
 
