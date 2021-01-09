@@ -4,9 +4,11 @@ import { GameGateway } from './game.gateway';
 import { GameController } from './game.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Game } from './game.entity';
+import { CityModule } from 'src/city/city.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Game])],
+  imports: [CityModule, UserModule, TypeOrmModule.forFeature([Game])],
   providers: [GameService, GameGateway],
   controllers: [GameController],
 })

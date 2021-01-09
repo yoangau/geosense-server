@@ -10,7 +10,7 @@ export class CityService {
     private cityRepository: Repository<City>,
   ) {}
 
-  find(quantity: number): Promise<City[]> {
+  get(quantity: number): Promise<City[]> {
     return this.cityRepository
       .createQueryBuilder()
       .select('*')

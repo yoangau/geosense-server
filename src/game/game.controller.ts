@@ -1,4 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { GameDTO } from './game.dto';
 import { Game } from './game.entity';
 import { GameService } from './game.service';
 
@@ -6,12 +7,12 @@ import { GameService } from './game.service';
 export class GameController {
   constructor(private gameService: GameService) {}
   @Get()
-  findAll(): Promise<Game[]> {
-    return this.gameService.findAll();
+  findOne(@Query('id') id: string): Promise<Game> {
+    return this.gameService.findOne(id);
   }
 
-  @Get(':id')
-  addOne(@Param('id') id: string): void {
-    this.gameService.addOne(id);
+  @Post()
+  addOne(@Body() game: GameDTO): Promise<Game> {
+    return this.gameService.addOne(game);
   }
 }

@@ -8,9 +8,6 @@ export class Game {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
-  name: string;
-
   @Column({ type: 'datetime' })
   dateCreated: Date;
 

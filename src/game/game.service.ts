@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CityService } from 'src/city/city.service';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
+import { GameDTO } from './game.dto';
 import { Game } from './game.entity';
 
 @Injectable()
@@ -8,13 +11,17 @@ export class GameService {
   constructor(
     @InjectRepository(Game)
     private gameRepository: Repository<Game>,
+    private cityService: CityService,
+    private userService: UserService,
   ) {}
 
-  findAll(): Promise<Game[]> {
-    return this.gameRepository.find({ relations: ['users'] });
+  findOne(id: string): Promise<Game> {
+    return this.gameRepository.findOne(id, { relations: ['users', 'scores'] });
   }
 
-  addOne(name: string): void {
-    this.gameRepository.save({ name, users: [{ name }] });
+  async addOne(game: GameDTO): Promise<Game> {
+    const cities = await this.cityService.get(game.cityQuantity);
+    const users = await this.userService.getThese(game.users);
+    return this.gameRepository.save({ dateCreated: new Date(), users, cities });
   }
 }

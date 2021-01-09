@@ -10,6 +10,10 @@ export class ScoreService {
     private scoreRepository: Repository<Score>,
   ) {}
 
+  getThese(scores: string[]): Promise<Score[]> {
+    return this.scoreRepository.findByIds(scores);
+  }
+
   updateScore(score: Score) {
     this.scoreRepository.save(score);
   }

@@ -6,5 +6,6 @@ import { ScoreService } from './score.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Score])],
   providers: [ScoreService],
+  exports: [ScoreService],
 })
 export class ScoreModule {}

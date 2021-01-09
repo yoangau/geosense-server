@@ -14,6 +14,10 @@ export class UserService {
     return this.userRepository.findOne(id, { relations: ['games', 'scores'] });
   }
 
+  getThese(ids: string[]): Promise<User[]> {
+    return this.userRepository.findByIds(ids);
+  }
+
   addOne(name: string): Promise<User> {
     return this.userRepository.save({ name, dateCreated: new Date() });
   }
