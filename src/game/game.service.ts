@@ -15,13 +15,13 @@ export class GameService {
     private userService: UserService,
   ) {}
 
-  findOne(id: string): Promise<Game> {
+  findOne(id: number): Promise<Game> {
     return this.gameRepository.findOne(id, { relations: ['users', 'scores'] });
   }
 
   async addOne(game: GameDTO): Promise<Game> {
     const cities = await this.cityService.get(game.cityQuantity);
-    const users = await this.userService.getThese(game.users);
+    const users = await this.userService.getThese(game.userIDs);
     return this.gameRepository.save({ dateCreated: new Date(), users, cities });
   }
 }

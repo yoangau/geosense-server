@@ -1,4 +1,5 @@
 export interface GameDTO {
-  users: string[];
+  userIDs: number[];
   cityQuantity: number;
+  groupID: number;
 }

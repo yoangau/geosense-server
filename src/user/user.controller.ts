@@ -13,7 +13,7 @@ export class UserController {
   }
 
   @Get()
-  getOne(@Query('id') id: string): Promise<User> {
+  getOne(@Query('id') id: number): Promise<User> {
     return this.userService.getOne(id);
   }
 }

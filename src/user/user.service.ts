@@ -10,11 +10,11 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  getOne(id: string): Promise<User> {
+  getOne(id: number): Promise<User> {
     return this.userRepository.findOne(id, { relations: ['games', 'scores'] });
   }
 
-  getThese(ids: string[]): Promise<User[]> {
+  getThese(ids: number[]): Promise<User[]> {
     return this.userRepository.findByIds(ids);
   }
 
