@@ -1,4 +1,5 @@
 import { Game } from 'src/game/game.entity';
+import { Group } from 'src/group/group.entity';
 import { Score } from 'src/score/score.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 
@@ -27,6 +28,18 @@ export class User {
     score => score.user,
   )
   scores: Score[];
+
+  @OneToMany(
+    type => Group,
+    group => group.admin,
+  )
+  adminGroups: Group[];
+
+  @ManyToMany(
+    type => Group,
+    group => group.users,
+  )
+  groups: Group[];
 
   @Column({ default: true })
   isActive: boolean;
