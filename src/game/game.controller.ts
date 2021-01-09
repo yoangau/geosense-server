@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { GameDTO } from './game.dto';
 import { Game } from './game.entity';
 import { GameService } from './game.service';
