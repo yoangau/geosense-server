@@ -1,6 +1,6 @@
 {
   "type": "sqlite",
-  "database": "geosense.sqlite",
+  "database": "db/geosense.sqlite",
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "synchronize": true,
   "logging": true
