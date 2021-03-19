@@ -15,7 +15,7 @@ export class GameService {
     private userService: UserService,
   ) {}
 
-  findOne(id: number): Promise<Game> {
+  findOne(id: string): Promise<Game> {
     return this.gameRepository.findOne(id, { relations: ['users', 'scores'] });
   }
 

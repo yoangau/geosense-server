@@ -5,7 +5,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 @Entity()
 export class Score {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
   score: number;

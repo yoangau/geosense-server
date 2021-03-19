@@ -12,12 +12,12 @@ export class GroupService {
     private userService: UserService,
   ) {}
 
-  findOne(id: number): Promise<Group> {
+  findOne(id: string): Promise<Group> {
     return this.groupRepository.findOne(id, { relations: ['users', 'scores'] });
   }
 
-  async addOne(adminID: number): Promise<Group> {
-    const user = await this.userService.getOne(adminID);
+  async addOne(adminId: string): Promise<Group> {
+    const user = await this.userService.getOne(adminId);
     return this.groupRepository.save({ user, users: [user], dateCreated: new Date() });
   }
 }
