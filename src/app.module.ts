@@ -7,7 +7,7 @@ import { ScoreModule } from './score/score.module';
 import { LobbyModule } from './lobby/lobby.module';
 
 @Module({
-  imports: [GameModule, CityModule, UserModule, ScoreModule, TypeOrmModule.forRoot(), LobbyModule],
+  imports: [GameModule, CityModule, UserModule, ScoreModule, LobbyModule, TypeOrmModule.forRoot()],
   controllers: [],
   providers: [],
 })
