@@ -5,7 +5,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinTabl
 @Entity()
 export class Group {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @ManyToOne(
     type => User,
