@@ -1,5 +1,5 @@
 import { City } from 'src/city/city.entity';
-import { Group } from 'src/group/group.entity';
+import { Lobby } from 'src/lobby/lobby.entity';
 import { Score } from 'src/score/score.entity';
 import { User } from 'src/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
@@ -39,10 +39,10 @@ export class Game {
   scores: Score[];
 
   @ManyToOne(
-    type => Group,
-    group => group.games,
+    type => Lobby,
+    lobby => lobby.games,
   )
-  group: Group;
+  lobby: Lobby;
 
   @Column({ default: true })
   isActive: boolean;

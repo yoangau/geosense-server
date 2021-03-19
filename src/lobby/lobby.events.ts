@@ -1,8 +1,8 @@
-export enum GroupSubEvent {
+export enum LobbySubEvent {
   Join = 'join',
   Remove = 'remove',
 }
 
-export enum GroupEmitEvent {
+export enum LobbyEmitEvent {
   Update = 'update',
 }
