@@ -5,9 +5,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { ScoreModule } from './score/score.module';
 import { LobbyModule } from './lobby/lobby.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [GameModule, CityModule, UserModule, ScoreModule, TypeOrmModule.forRoot(), LobbyModule],
+  imports: [
+    GameModule,
+    CityModule,
+    UserModule,
+    ScoreModule,
+    LobbyModule,
+    TypeOrmModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true, cache: true }),
+  ],
   controllers: [],
   providers: [],
 })

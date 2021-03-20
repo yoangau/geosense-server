@@ -1,4 +1,5 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { LobbyUserAdminDTO } from './lobby.dto';
 import { Lobby } from './lobby.entity';
 import { LobbyService } from './lobby.service';
 
@@ -6,8 +7,8 @@ import { LobbyService } from './lobby.service';
 export class LobbyController {
   constructor(private lobbyService: LobbyService) {}
 
-  @Post(':id')
-  addOne(@Param('id') id: string): Promise<Lobby> {
-    return this.addOne(id);
+  @Post()
+  addOne(@Body() { adminId }: LobbyUserAdminDTO): Promise<Lobby> {
+    return this.lobbyService.addOne(adminId);
   }
 }
