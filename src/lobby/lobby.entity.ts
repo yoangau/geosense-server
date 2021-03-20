@@ -3,19 +3,19 @@ import { User } from 'src/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinTable, OneToMany } from 'typeorm';
 
 @Entity()
-export class Group {
-  @PrimaryGeneratedColumn()
+export class Lobby {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ManyToOne(
     type => User,
-    user => user.adminGroups,
+    user => user.adminLobbies,
   )
   admin: User;
 
   @ManyToMany(
     type => User,
-    user => user.groups,
+    user => user.lobbies,
     {
       cascade: true,
     },
@@ -28,7 +28,7 @@ export class Group {
 
   @OneToMany(
     type => Game,
-    game => game.group,
+    game => game.lobby,
   )
   games: Game[];
 }
