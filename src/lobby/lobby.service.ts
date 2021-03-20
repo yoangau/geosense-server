@@ -14,17 +14,18 @@ export class LobbyService {
   ) {}
 
   findOne(id: string): Promise<Lobby> {
-    return this.lobbyRepository.findOne(id, { relations: ['users', 'scores'] });
+    return this.lobbyRepository.findOne(id, { relations: ['users'] });
   }
 
   async addOne(adminId: string): Promise<Lobby> {
     const user = await this.userService.getOne(adminId);
-    return this.lobbyRepository.save({ admin: user, users: [user], dateCreated: new Date() });
+    return this.lobbyRepository.save({ admin: user, users: [], dateCreated: new Date() });
   }
 
   async addUser({ userId, lobbyId }: LobbyUserDTO) {
     const user = await this.userService.getOne(userId);
     const lobby = await this.findOne(lobbyId);
+    if (!lobby.users.find(u => u.id === userId)) return lobby;
     return this.lobbyRepository.save({ ...lobby, users: [...lobby.users, user] });
   }
 
