@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { UserDTO } from './user.dto';
+import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { JwtUserGuard } from './jwt-user.guard';
+import { JWTPayload, UserAddDTO, UserDTO } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -8,13 +9,15 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  addOne(@Body() { name, color }: UserDTO): Promise<User> {
-    return this.userService.addOne(name, color);
+  async addOne(@Body() { name, color }: UserAddDTO): Promise<UserDTO> {
+    const user = await this.userService.addOne(name, color);
+    const token = this.userService.login(user.id);
+    return { user, token };
   }
 
+  @UseGuards(JwtUserGuard)
   @Get()
-  getOne(@Query('id') id: string): Promise<User> {
-    // TODO REQUIRED PARAM
-    return this.userService.getOne(id);
+  getOne(@Request() { user }: { user: JWTPayload }): Promise<User> {
+    return this.userService.getOne(user.userId);
   }
 }
