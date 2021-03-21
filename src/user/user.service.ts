@@ -12,11 +12,11 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  getOne(id: string): Promise<User> {
-    return this.userRepository.findOne(id, { relations: ['games', 'scores'] });
+  findOne(id: string): Promise<User | undefined> {
+    return this.userRepository.findOne({ where: { id }, relations: ['games', 'scores'] });
   }
 
-  getThese(ids: number[]): Promise<User[]> {
+  findThese(ids: number[]): Promise<User[]> {
     return this.userRepository.findByIds(ids);
   }
 
@@ -25,9 +25,13 @@ export class UserService {
   }
 
   async validateUser(userToken: string): Promise<boolean> {
-    const { id }: any = this.jwtService.decode(userToken);
-    const user = await this.getOne(id);
-    return user && user.id !== id;
+    try {
+      const { userId } = this.jwtService.verify<{ userId: string }>(userToken);
+      const user = await this.findOne(userId);
+      return Boolean(user);
+    } catch {
+      return false;
+    }
   }
 
   login(userId: string) {

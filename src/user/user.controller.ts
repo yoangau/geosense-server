@@ -15,9 +15,9 @@ export class UserController {
     return { user, token };
   }
 
-  @UseGuards(JwtUserGuard)
   @Get()
-  getOne(@Request() { user }: { user: JWTPayload }): Promise<User> {
-    return this.userService.getOne(user.userId);
+  @UseGuards(JwtUserGuard)
+  getOne(@Request() { user: { user } }: { user: JWTPayload }): User {
+    return user;
   }
 }

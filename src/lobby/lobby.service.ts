@@ -1,35 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
-import { Repository } from 'typeorm';
 import { LobbyUserDTO } from './lobby.dto';
-import { Lobby } from './lobby.entity';
+import Lobby from './lobby';
 
 @Injectable()
 export class LobbyService {
-  constructor(
-    @InjectRepository(Lobby)
-    private lobbyRepository: Repository<Lobby>,
-    private userService: UserService,
-  ) {}
+  private lobbies: Lobby[] = [];
 
-  findOne(id: string): Promise<Lobby> {
-    return this.lobbyRepository.findOne(id, { relations: ['users', 'scores'] });
+  constructor(private userService: UserService) {}
+
+  findLobby(id: string): Lobby | undefined {
+    return this.lobbies.find(lob => lob.id === id);
   }
 
-  async addOne(adminId: string): Promise<Lobby> {
-    const user = await this.userService.getOne(adminId);
-    return this.lobbyRepository.save({ admin: user, users: [user], dateCreated: new Date() });
-  }
-
-  async addUser({ userId, lobbyId }: LobbyUserDTO) {
-    const user = await this.userService.getOne(userId);
-    const lobby = await this.findOne(lobbyId);
-    return this.lobbyRepository.save({ ...lobby, users: [...lobby.users, user] });
+  async createLobby(userId: string): Promise<Lobby | undefined> {
+    const user = await this.userService.findOne(userId);
+    if (!user || user.id !== userId) return;
+    const lobby = new Lobby(user);
+    this.lobbies.push(lobby);
+    return lobby;
   }
 
   async removeUser({ userId, lobbyId }: LobbyUserDTO) {
-    const lobby = await this.findOne(lobbyId);
-    return this.lobbyRepository.save({ ...lobby, users: lobby.users.filter(u => u.id !== userId) });
+    const user = await this.userService.findOne(userId);
+    if (!user || user.id !== userId) return;
+    const lobby = this.findLobby(lobbyId);
+    if (!lobby) return;
+    lobby.removeUser(user);
   }
 }
