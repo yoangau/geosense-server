@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { LobbyUserAdminDTO } from './lobby.dto';
-import { Lobby } from './lobby.entity';
+import Lobby from './lobby';
 import { LobbyService } from './lobby.service';
 
 @Controller('lobby')
