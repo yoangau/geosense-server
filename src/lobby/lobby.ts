@@ -16,4 +16,12 @@ export default class Lobby {
     this.games = [];
     this.id = Lobby.generateId();
   }
+
+  addUser(user: User) {
+    this.users.push(user);
+  }
+
+  removeUser(user: User) {
+    this.users = this.users.filter(u => u.id !== user.id);
+  }
 }
