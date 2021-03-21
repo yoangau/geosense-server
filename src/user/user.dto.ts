@@ -11,5 +11,9 @@ export interface UserDTO {
 }
 
 export interface JWTPayload {
+  user: User;
+}
+
+export interface UserIdDTO {
   userId: string;
 }
