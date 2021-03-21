@@ -10,8 +10,8 @@ export class AuthSocketIOAdapter extends IoAdapter {
     this.userService = this.app.get(UserService);
   }
 
-  createIOServer(port: number, options?: SocketIO.ServerOptions): any {
-    options.allowRequest = async (request, allowFunction) => {
+  createIOServer(port: number, options: SocketIO.ServerOptions = {}): any {
+    options.allowRequest = async (request: any, allowFunction) => {
       const { token } = request['_query'];
       const verified = await this.userService.validateUser(token);
       return allowFunction(verified ? null : 'Unauthorized', verified);
