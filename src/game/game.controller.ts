@@ -7,7 +7,7 @@ import { GameService } from './game.service';
 export class GameController {
   constructor(private gameService: GameService) {}
   @Get()
-  findOne(@Query('id') id: string): Promise<Game> {
+  findOne(@Query('id') id: string): Promise<Game | undefined> {
     return this.gameService.findOne(id);
   }
 
