@@ -1,5 +1,4 @@
 import { Game } from 'src/game/game.entity';
-import { Lobby } from 'src/lobby/lobby.entity';
 import { Score } from 'src/score/score.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 
@@ -28,18 +27,6 @@ export class User {
     score => score.user,
   )
   scores: Score[];
-
-  @OneToMany(
-    type => Lobby,
-    lobby => lobby.admin,
-  )
-  adminLobbies: Lobby[];
-
-  @ManyToMany(
-    type => Lobby,
-    lobby => lobby.users,
-  )
-  lobbies: Lobby[];
 
   @Column({ default: true })
   isActive: boolean;

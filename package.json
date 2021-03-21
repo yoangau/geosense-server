@@ -37,7 +37,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "sqlite3": "^5.0.0",
-    "typeorm": "^0.2.29"
+    "typeorm": "^0.2.29",
+    "unique-names-generator": "^4.4.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
