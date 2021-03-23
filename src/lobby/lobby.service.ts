@@ -27,5 +27,6 @@ export class LobbyService {
     const lobby = this.findLobby(lobbyId);
     if (!lobby) return;
     lobby.removeUser(user);
+    return lobby;
   }
 }
