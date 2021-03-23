@@ -19,9 +19,16 @@ export default class Lobby {
 
   addUser(user: User) {
     this.users.push(user);
+    return this;
   }
 
   removeUser(user: User) {
     this.users = this.users.filter(u => u.id !== user.id);
+    return this;
+  }
+
+  removeUserById(userId: string) {
+    this.users = this.users.filter(u => u.id !== userId);
+    return this;
   }
 }
