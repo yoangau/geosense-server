@@ -20,12 +20,4 @@ export class LobbyService {
     this.lobbies.push(lobby);
     return lobby;
   }
-
-  async removeUser({ userId, lobbyId }: LobbyUserDTO) {
-    const user = await this.userService.findOne(userId);
-    if (!user || user.id !== userId) return;
-    const lobby = this.findLobby(lobbyId);
-    if (!lobby) return;
-    lobby.removeUser(user);
-  }
 }
