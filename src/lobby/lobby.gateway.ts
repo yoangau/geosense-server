@@ -62,8 +62,8 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
   @SubscribeMessage(LobbySubEvent.Remove)
   async handleRemove(@MessageBody(LobbyPipe) { user, lobby }: LobbyPipeDTO) {
     lobby.removeUser(user);
+    this.server.to(lobby.id).emit(LobbyEmitEvent.Update, lobby);
     this.userIdsToSockets[user.id].leave(lobby.id);
     delete this.userIdsToLobby[user.id];
-    this.server.to(lobby.id).emit(LobbyEmitEvent.Update, lobby);
   }
 }
