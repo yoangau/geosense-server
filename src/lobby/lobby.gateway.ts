@@ -42,7 +42,9 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
     const lobby = this.userIdsToLobby[userId]?.removeUserById(userId);
 
     if (lobby) this.server.to(lobby.id).emit(LobbyEmitEvent.Update, lobby);
-
+    if (lobby?.isEmpty()) {
+      this.lobbyService.removeLobby(lobby.id);
+    }
     delete this.userIdsToSockets[userId];
     delete this.socketIdsToUserIds[client.id];
     delete this.userIdsToLobby[userId];
@@ -61,7 +63,9 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
 
   @SubscribeMessage(LobbySubEvent.Remove)
   async handleRemove(@MessageBody(LobbyPipe) { user, lobby }: LobbyPipeDTO) {
-    lobby.removeUser(user);
+    if (lobby.removeUser(user).isEmpty()) {
+      this.lobbyService.removeLobby(lobby.id);
+    }
     this.server.to(lobby.id).emit(LobbyEmitEvent.Update, lobby);
     this.userIdsToSockets[user.id].leave(lobby.id);
     delete this.userIdsToLobby[user.id];
