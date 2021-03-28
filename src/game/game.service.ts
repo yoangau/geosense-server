@@ -22,6 +22,6 @@ export class GameService {
   async addOne(game: GameDTO): Promise<Game> {
     const cities = await this.cityService.get(game.cityQuantity);
     const users = await this.userService.findThese(game.userIDs);
-    return this.gameRepository.save({ dateCreated: new Date(), users, cities });
+    return this.gameRepository.save({ users, cities });
   }
 }
