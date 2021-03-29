@@ -1,5 +1,6 @@
 import { Game } from 'src/game/game.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Score } from 'src/score/score.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
 export class City {
@@ -29,6 +30,12 @@ export class City {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(
+    type => Score,
+    score => score.city,
+  )
+  scores: Score[];
 
   @ManyToMany(
     type => Game,
