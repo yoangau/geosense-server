@@ -1,12 +1,31 @@
 import { City } from 'src/city/city.entity';
 import { Game } from 'src/game/game.entity';
 import { User } from 'src/user/user.entity';
-import { Entity, PrimaryGeneratedColumn, ManyToOne, AfterInsert, Column } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn,
+  AfterInsert,
+} from 'typeorm';
 import clamp from 'lodash.clamp';
+
 @Entity()
 export class Score {
   @PrimaryGeneratedColumn()
   id: string;
+
+  @CreateDateColumn({ type: 'datetime' })
+  dateCreated: Date;
+
+  @UpdateDateColumn({ type: 'datetime' })
+  dateUpdated: Date;
+
+  @VersionColumn()
+  version: number;
 
   @Column()
   latitude: number;

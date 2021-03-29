@@ -1,6 +1,15 @@
 import { Game } from 'src/game/game.entity';
 import { Score } from 'src/score/score.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  OneToMany,
+  UpdateDateColumn,
+  CreateDateColumn,
+  VersionColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -13,8 +22,14 @@ export class User {
   @Column()
   color: string;
 
-  @Column({ type: 'datetime' })
+  @CreateDateColumn({ type: 'datetime' })
   dateCreated: Date;
+
+  @UpdateDateColumn({ type: 'datetime' })
+  dateUpdated: Date;
+
+  @VersionColumn()
+  version: number;
 
   @ManyToMany(
     type => Game,

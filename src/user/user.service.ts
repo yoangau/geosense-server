@@ -21,7 +21,7 @@ export class UserService {
   }
 
   addOne(name: string, color: string): Promise<User> {
-    return this.userRepository.save({ name, color, dateCreated: new Date() });
+    return this.userRepository.save({ name, color });
   }
 
   async validateUser(userToken: string): Promise<boolean> {
