@@ -1,15 +1,31 @@
 import { City } from 'src/city/city.entity';
 import { Score } from 'src/score/score.entity';
 import { User } from 'src/user/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn,
+} from 'typeorm';
 
 @Entity()
 export class Game {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'datetime' })
+  @CreateDateColumn({ type: 'datetime' })
   dateCreated: Date;
+
+  @UpdateDateColumn({ type: 'datetime' })
+  dateUpdated: Date;
+
+  @VersionColumn()
+  version: number;
 
   @ManyToMany(
     type => User,
