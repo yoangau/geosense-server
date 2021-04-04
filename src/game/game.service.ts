@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CityService } from 'src/city/city.service';
-import { Score } from 'src/score/score.entity';
 import { ScoreService } from 'src/score/score.service';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -89,13 +88,12 @@ export class GameService {
     };
   }
 
-  async score(game: Game, user: User, latitude: number, longitude: number): Promise<Score | undefined> {
+  async score(game: Game, user: User, latitude: number, longitude: number) {
     const gameState = this.gameStates[game.id];
     if (!gameState || gameState.state === 'wait' || !gameState.roundUsers.find(uid => uid === user.id)) return;
     const city = game.cities[gameState.roundNumber];
     const deltaTimeSeconds = (Date.now() - gameState.roundStartTime) / 1000;
-    const score = await this.scoreService.score(game, user, city, latitude, longitude, deltaTimeSeconds);
+    this.scoreService.score(game, user, city, latitude, longitude, deltaTimeSeconds);
     if (gameState.roundUsers.length >= game.users.length) this.nextRound(game);
-    return score;
   }
 }
