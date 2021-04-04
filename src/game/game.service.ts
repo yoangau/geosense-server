@@ -37,7 +37,7 @@ export class GameService {
   ) {}
 
   find(id: string): Promise<Game | undefined> {
-    return this.gameRepository.findOne({ where: { id }, relations: ['users', 'scores'] });
+    return this.gameRepository.findOne({ where: { id }, relations: ['users', 'cities', 'scores'] });
   }
 
   async create(game: GameDTO): Promise<Game> {
