@@ -9,17 +9,44 @@ import { Repository } from 'typeorm';
 import { GameDTO } from './game.dto';
 import { Game } from './game.entity';
 
+interface GameStateCtorParams {
+  startGameEvent: CallableFunction;
+  endGameEvent: CallableFunction;
+  waitRoundEvent: CallableFunction;
+  playRoundEvent: CallableFunction;
+}
+
 class GameState {
   roundNumber = -1;
   roundUsers: string[] = [];
   roundStartTime = Date.now();
   state: 'wait' | 'play' = 'wait';
 
+  private startGameEvent: CallableFunction;
+  endGameEvent: CallableFunction;
+
+  private waitRoundEvent: CallableFunction;
+  private playRoundEvent: CallableFunction;
+
+  constructor({ startGameEvent, endGameEvent, waitRoundEvent, playRoundEvent }: GameStateCtorParams) {
+    this.startGameEvent = startGameEvent;
+    this.endGameEvent = endGameEvent;
+    this.waitRoundEvent = waitRoundEvent;
+    this.playRoundEvent = playRoundEvent;
+    this.startGameEvent();
+  }
+
   nextRound() {
     this.roundNumber++;
     this.roundUsers = [];
     this.state = 'wait';
     this.roundStartTime = Date.now();
+    this.waitRoundEvent();
+  }
+
+  playRound() {
+    this.state = 'play';
+    this.playRoundEvent();
   }
 }
 
@@ -46,14 +73,14 @@ export class GameService {
     return this.gameRepository.save({ users, cities });
   }
 
-  startGame(game: Game) {
-    this.gameStates[game.id] = new GameState();
-    console.log('emit start-game');
+  startGame(game: Game, gameStateCtorParams: GameStateCtorParams) {
+    const gameState = new GameState(gameStateCtorParams);
+    this.gameStates[game.id] = gameState;
     this.startRound(game);
   }
 
   endGame(game: Game) {
-    console.log('emit end-game');
+    this.gameStates[game.id]?.endGameEvent();
     delete this.gameStates[game.id];
   }
 
@@ -62,12 +89,10 @@ export class GameService {
     if (!gameState || gameState.roundNumber >= game.cities.length) {
       return this.endGame(game);
     }
-    console.log('emit wait-round');
     gameState.nextRound();
 
     const waitTimeout = setTimeout(() => {
-      console.log('emit play-round');
-      gameState.state = 'play';
+      gameState.playRound();
       const playTimeout = setTimeout(() => {
         this.startRound(game);
       }, 10000);
