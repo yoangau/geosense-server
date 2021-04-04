@@ -7,9 +7,15 @@ import { Repository } from 'typeorm';
 import { GameDTO } from './game.dto';
 import { Game } from './game.entity';
 
+class GameState {
+  roundNumber = 0;
+  roundUsers: string[] = [];
+  state: 'wait' | 'play' = 'wait';
+}
+
 @Injectable()
 export class GameService {
-  private gameRounds: Record<string, number> = {};
+  private gameStates: Record<string, GameState> = {};
 
   constructor(
     @InjectRepository(Game)
@@ -30,16 +36,45 @@ export class GameService {
   }
 
   startGame(game: Game) {
-    this.gameRounds[game.id] = game.cities.length - 1;
+    this.gameStates[game.id] = new GameState();
+    this.startRound(game);
   }
 
-  startRound(game: Game, callback: CallableFunction) {
-    const milliseconds = 10000;
-    const timeout = setTimeout(callback, milliseconds);
-    this.schedulerRegistry.addTimeout(game.id, timeout);
+  endGame(game: Game) {
+    console.log('emit end-game');
+    delete this.gameStates[game.id];
   }
 
-  stopRound(game: Game) {
+  startRound(game: Game) {
+    const gameState = this.gameStates[game.id];
+    if (!gameState || gameState.roundNumber >= game.cities.length) {
+      return this.endGame(game);
+    }
+    console.log('emit round-starting');
+    gameState.state = 'wait';
+
+    const waitTimeout = setTimeout(() => {
+      console.log('emit round-starting');
+      gameState.state = 'play';
+      const playTimeout = setTimeout(() => {
+        this.gameStates[game.id].roundNumber++;
+        this.startRound(game);
+      }, 10000);
+      this.schedulerRegistry.addTimeout(game.id, playTimeout);
+    }, 5000);
+    this.schedulerRegistry.addTimeout(game.id, waitTimeout);
+  }
+
+  nextRound(game: Game) {
     this.schedulerRegistry.deleteTimeout(game.id);
+    this.gameStates[game.id].roundNumber++;
+    this.startRound(game);
+  }
+
+  private prepareGame(game: Game, gameSate: GameState): Game {
+    return {
+      ...game,
+      cities: game.cities.slice(0, gameSate.roundNumber),
+    };
   }
 }
