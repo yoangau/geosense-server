@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { ScoreModule } from './score/score.module';
 import { LobbyModule } from './lobby/lobby.module';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     ScoreModule,
     LobbyModule,
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
   ],

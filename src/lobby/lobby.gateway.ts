@@ -1,5 +1,3 @@
-import { Body, Inject, UsePipes } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import {
   ConnectedSocket,

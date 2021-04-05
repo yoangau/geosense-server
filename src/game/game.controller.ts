@@ -8,11 +8,11 @@ export class GameController {
   constructor(private gameService: GameService) {}
   @Get()
   findOne(@Query('id') id: string): Promise<Game | undefined> {
-    return this.gameService.findOne(id);
+    return this.gameService.find(id);
   }
 
   @Post()
   addOne(@Body() game: GameDTO): Promise<Game> {
-    return this.gameService.addOne(game);
+    return this.gameService.create(game);
   }
 }
