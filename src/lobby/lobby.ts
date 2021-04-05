@@ -17,18 +17,22 @@ export default class Lobby {
     this.id = Lobby.generateId();
   }
 
-  addUser(user: User) {
+  addUser(user: User): Lobby {
     this.users.push(user);
     return this;
   }
 
-  removeUser(user: User) {
-    this.users = this.users.filter(u => u.id !== user.id);
+  removeUser(user: User): Lobby {
+    return this.removeUserById(user.id);
+  }
+
+  removeUserById(userId: string): Lobby {
+    this.users = this.users.filter(u => u.id !== userId);
+    if (this.admin.id === userId && this.users.length) this.admin = this.users[0];
     return this;
   }
 
-  removeUserById(userId: string) {
-    this.users = this.users.filter(u => u.id !== userId);
-    return this;
+  isEmpty(): boolean {
+    return !this.users.length;
   }
 }
