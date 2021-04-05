@@ -18,9 +18,9 @@ import { LobbyService } from './lobby.service';
 
 @WebSocketGateway()
 export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
-  private userIdsToSockets: Record<string, Socket> = {};
-  private socketIdsToUserIds: Record<string, string> = {};
-  private userIdsToLobby: Record<string, Lobby> = {};
+  private userIdsToSockets: Map<string, Socket> = new Map();
+  private socketIdsToUserIds: Map<string, string> = new Map();
+  private userIdsToLobby: Map<string, Lobby> = new Map();
 
   @WebSocketServer()
   protected server: Server;
@@ -30,20 +30,20 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
   handleConnection(client: Socket) {
     const { token } = client.handshake.query;
     const { userId } = this.jwtService.verify<UserIdDTO>(token);
-    this.userIdsToSockets[userId] = client;
-    this.socketIdsToUserIds[client.id] = userId;
+    this.userIdsToSockets.set(userId, client);
+    this.socketIdsToUserIds.set(client.id, userId);
   }
 
   async handleDisconnect(client: Socket) {
-    const userId = this.socketIdsToUserIds[client.id];
-
-    const lobby = this.userIdsToLobby[userId]?.removeUserById(userId);
+    const userId = this.socketIdsToUserIds.get(client.id);
+    if (!userId) return;
+    const lobby = this.userIdsToLobby.get(userId)?.removeUserById(userId);
 
     if (lobby) this.server.to(lobby.id).emit(LobbyEmitEvent.Update, lobby);
 
-    delete this.userIdsToSockets[userId];
-    delete this.socketIdsToUserIds[client.id];
-    delete this.userIdsToLobby[userId];
+    this.userIdsToSockets.delete(userId);
+    this.socketIdsToUserIds.delete(client.id);
+    this.userIdsToLobby.delete(userId);
   }
 
   @SubscribeMessage(LobbySubEvent.Join)
@@ -51,8 +51,8 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
     lobby.users.push(user);
     client.join(lobby.id);
 
-    this.userIdsToLobby[user.id]?.removeUser(user);
-    this.userIdsToLobby[user.id] = lobby;
+    this.userIdsToLobby.get(user.id)?.removeUser(user);
+    this.userIdsToLobby.set(user.id, lobby);
 
     this.server.to(lobby.id).emit(LobbyEmitEvent.Update, lobby);
   }
@@ -61,7 +61,7 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
   async handleRemove(@MessageBody(LobbyPipe) { user, lobby }: LobbyPipeDTO) {
     lobby.removeUser(user);
     this.server.to(lobby.id).emit(LobbyEmitEvent.Update, lobby);
-    this.userIdsToSockets[user.id].leave(lobby.id);
-    delete this.userIdsToLobby[user.id];
+    this.userIdsToSockets.get(user.id)?.leave(lobby.id);
+    this.userIdsToLobby.delete(user.id);
   }
 }
