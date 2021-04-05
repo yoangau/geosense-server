@@ -13,7 +13,7 @@ import { GameState, GameStateCtorParams } from './game.state';
 
 @Injectable()
 export class GameService {
-  private gameStates: Record<string, GameState> = {};
+  private gameStates: Map<string, GameState> = new Map();
 
   constructor(
     @InjectRepository(Game)
@@ -36,17 +36,17 @@ export class GameService {
 
   startGame(game: Game, gameStateCtorParams: GameStateCtorParams) {
     const gameState = new GameState(gameStateCtorParams);
-    this.gameStates[game.id] = gameState;
+    this.gameStates.set(game.id, gameState);
     this.startRound(game);
   }
 
   endGame(game: Game) {
-    this.gameStates[game.id]?.endGameEvent();
-    delete this.gameStates[game.id];
+    this.gameStates.get(game.id)?.endGameEvent();
+    this.gameStates.delete(game.id);
   }
 
   startRound(game: Game) {
-    const gameState = this.gameStates[game.id];
+    const gameState = this.gameStates.get(game.id);
     if (!gameState || gameState.roundNumber >= game.cities.length) {
       return this.endGame(game);
     }
@@ -75,7 +75,7 @@ export class GameService {
   }
 
   async score(game: Game, user: User, latitude: number, longitude: number): Promise<Score | undefined> {
-    const gameState = this.gameStates[game.id];
+    const gameState = this.gameStates.get(game.id);
     if (!gameState || gameState.state === 'wait' || !gameState.roundUsers.find(uid => uid === user.id)) return;
     const city = game.cities[gameState.roundNumber];
     const deltaTimeSeconds = (Date.now() - gameState.roundStartTime) / 1000;
