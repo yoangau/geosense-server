@@ -13,6 +13,10 @@ export class LobbyService {
     return this.lobbies.find(lob => lob.id === id);
   }
 
+  removeLobby(id: string): void {
+    this.lobbies = this.lobbies.filter(lob => lob.id !== id);
+  }
+
   async createLobby(userId: string): Promise<Lobby | undefined> {
     const user = await this.userService.findOne(userId);
     if (!user || user.id !== userId) return;
