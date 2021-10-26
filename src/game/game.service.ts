@@ -22,7 +22,7 @@ export class GameService {
     private userService: UserService,
     private scoreService: ScoreService,
     private schedulerRegistry: SchedulerRegistry,
-  ) {}
+  ) { }
 
   find(id: string): Promise<Game | undefined> {
     return this.gameRepository.findOne({ where: { id }, relations: ['users', 'cities', 'scores'] });
@@ -65,6 +65,14 @@ export class GameService {
   nextRound(game: Game) {
     this.schedulerRegistry.deleteTimeout(game.id);
     this.startRound(game);
+  }
+
+  async getGameUpdate(gameId: string): Promise<Game | undefined> {
+    const game = await this.find(gameId)
+    if (!game) return
+    const gameState = this.gameStates.get(game.id)
+    if (!gameState) return
+    return this.prepareGame(game, gameState)
   }
 
   private prepareGame(game: Game, gameSate: GameState): Game {

@@ -9,6 +9,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { GameEmitEvent } from 'src/game/game.events';
+import { GameService } from 'src/game/game.service';
 import { UserIdDTO } from 'src/user/user.dto';
 import Lobby from './lobby';
 import { LobbyPipeDTO } from './lobby.dto';
@@ -25,7 +27,7 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
   @WebSocketServer()
   protected server: Server;
 
-  constructor(private lobbyService: LobbyService, private jwtService: JwtService) {}
+  constructor(private lobbyService: LobbyService, private jwtService: JwtService, private gameService: GameService) { }
 
   handleConnection(client: Socket) {
     const { token } = client.handshake.query;
@@ -44,7 +46,7 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
     if (lobby?.isEmpty()) {
       this.lobbyService.removeLobby(lobby.id);
     }
-    
+
     this.userIdsToSockets.delete(userId);
     this.socketIdsToUserIds.delete(client.id);
     this.userIdsToLobby.delete(userId);
@@ -70,5 +72,31 @@ export class LobbyGateway implements OnGatewayDisconnect, OnGatewayConnection {
     this.server.to(lobby.id).emit(LobbyEmitEvent.Update, lobby);
     this.userIdsToSockets.get(user.id)?.leave(lobby.id);
     this.userIdsToLobby.delete(user.id);
+  }
+
+  @SubscribeMessage(LobbySubEvent.Start)
+  async handleStart(@MessageBody(LobbyPipe) { lobby, game }: LobbyPipeDTO) {
+    if (!game) return;
+    const startGame = await this.gameService.getGameUpdate(game.id)
+    this.server.to(lobby.id).emit(LobbyEmitEvent.Start, startGame);
+
+    this.gameService.startGame(game, {
+      startGameEvent: async () => {
+        const gameUpdate = await this.gameService.getGameUpdate(game.id)
+        this.server.to(lobby.id).emit(GameEmitEvent.StartGame, gameUpdate)
+      },
+      endGameEvent: async () => {
+        const gameUpdate = await this.gameService.getGameUpdate(game.id)
+        this.server.to(lobby.id).emit(GameEmitEvent.EndGame, gameUpdate)
+      },
+      waitRoundEvent: async () => {
+        const gameUpdate = await this.gameService.getGameUpdate(game.id)
+        this.server.to(lobby.id).emit(GameEmitEvent.WaitRound, gameUpdate)
+      },
+      playRoundEvent: async () => {
+        const gameUpdate = await this.gameService.getGameUpdate(game.id)
+        this.server.to(lobby.id).emit(GameEmitEvent.PlayRound, gameUpdate)
+      },
+    })
   }
 }
