@@ -12,5 +12,6 @@ import { ScoreModule } from 'src/score/score.module';
   imports: [CityModule, UserModule, ScoreModule, TypeOrmModule.forFeature([Game])],
   providers: [GameService, GameGateway],
   controllers: [GameController],
+  exports: [GameService],
 })
-export class GameModule {}
+export class GameModule { }
